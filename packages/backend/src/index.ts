@@ -28,9 +28,11 @@ import scaffolder from './plugins/scaffolder';
 import proxy from './plugins/proxy';
 import techdocs from './plugins/techdocs';
 import search from './plugins/search';
+import blameless from './plugins/blameless';
 import { PluginEnvironment } from './types';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 import { DefaultIdentityClient } from '@backstage/plugin-auth-node';
+import {BlamelessJob} from '@internal/backstage-plugin-blameless-backend';
 
 function makeCreateEnv(config: Config) {
   const root = getRootLogger();
@@ -93,6 +95,11 @@ async function main() {
   apiRouter.use('/techdocs', await techdocs(techdocsEnv));
   apiRouter.use('/proxy', await proxy(proxyEnv));
   apiRouter.use('/search', await search(searchEnv));
+  apiRouter.use('/blameeless', await blameless(createEnv('blameless')));
+
+  // Run the blameless cronjob in the blameless plugin
+  const blamelessJob = new BlamelessJob({config, logger: getRootLogger(), discovery: HostDiscovery.fromConfig(config)});
+  await blamelessJob.start();
 
   // Add backends ABOVE this line; this 404 handler is the catch-all fallback
   apiRouter.use(notFoundHandler());
