@@ -1,17 +1,16 @@
 {
-  "name": "@internal/backstage-plugin-blameless-backend",
-  "version": "0.1.0",
+  "name": "@blamelesshq/blameless-backstage",
+  "version": "0.1.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
-  "license": "Apache-2.0",
-  "private": true,
-  "publishConfig": {
-    "access": "public",
-    "main": "dist/index.cjs.js",
-    "types": "dist/index.d.ts"
-  },
+  "author": "Blameless",
+  "license": "ISC",
   "backstage": {
     "role": "backend-plugin"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blamelesshq/blameless-components.git"
   },
   "scripts": {
     "start": "backstage-cli package start",
