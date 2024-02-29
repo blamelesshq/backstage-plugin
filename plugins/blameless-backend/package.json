@@ -1,6 +1,6 @@
 {
   "name": "@blamelesshq/blameless-backstage",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "author": "Blameless",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/blamelesshq/blameless-components.git"
+    "url": "git+https://github.com/blamelesshq/backstage-plugin.git"
   },
   "scripts": {
     "start": "backstage-cli package start",
