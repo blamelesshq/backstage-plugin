@@ -1,2 +1,26 @@
-# backstage-plugin
-Backstage backend plugin to push entities to blameless
+# blameless
+
+Welcome to the blameless backend plugin!
+
+_This plugin was created through the Backstage CLI_
+
+## Getting started
+
+Your plugin has been added to the example app in this repository, meaning you'll be able to access it by running `yarn
+start` in the root directory, and then navigating to [/blameless](http://localhost:3000/blameless).
+
+You can also serve the plugin in isolation by running `yarn start` in the plugin directory.
+This method of serving the plugin provides quicker iteration speed and a faster startup and hot reloads.
+It is only meant for local development, and the setup for it can be found inside the [/dev](/dev) directory.
+
+ 
+## Requirments
+
+To utilize the Blameless plugin, please ensure that the following config are added to you config file:
+
+- balemeless:
+  auth:
+    key: your blameless-key //xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    url: your blameless base url
+  baseUrl: your blameless base url
+  interval: 30 // in minutes
