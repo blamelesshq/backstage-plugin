@@ -1,16 +1,12 @@
-# blameless
+# blameless Plugin
 
 Welcome to the blameless backstage backend plugin!
 
 
-## Getting started
+## Overview
 
-Your plugin has been added to the example app in this repository, meaning you'll be able to access it by running `yarn
-start` in the root directory, and then navigating to [/blameless](http://localhost:3000/blameless).
-
-You can also serve the plugin in isolation by running `yarn start` in the plugin directory.
-This method of serving the plugin provides quicker iteration speed and a faster startup and hot reloads.
-It is only meant for local development, and the setup for it can be found inside the [/dev](/dev) directory.
+**Backstage Backend Sync Plugin** is a backend plugin designed specifically for Blameless clients who need to synchronize their entities effortlessly. 
+With this plugin, clients can seamlessly sync their entities with blameless on a periodic interval, ensuring consistency and accuracy.
 
 
 ## Installation
