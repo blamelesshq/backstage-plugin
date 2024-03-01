@@ -51,7 +51,7 @@ export class BlamelessService implements BlamelessAPI {
         })
         .then(async response => {
             const data: AuthResponse | null = await response.json();
-            if (response.status === 200) {
+            if (response.status === 204) {
                 this.connectionConfig.logger.info('New token received');
                 return data;
             }

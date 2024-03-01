@@ -27,8 +27,8 @@ export class BlamelessJob {
             return {
                 name: entity.metadata.name,
                 kind: entity.kind,
-                namespace: entity.metadata.namespace,
-                type: entity.spec.type,
+                namespace: entity.metadata.namespace || 'default',
+                type: entity.spec.type || 'other',
             }
         });
         // update blameless services
