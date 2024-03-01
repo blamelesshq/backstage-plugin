@@ -23,13 +23,15 @@ You can install MyNpmPackage via yarn:
 
 To utilize the Blameless plugin, please ensure that the following config are added to you config yaml file:
 
-- balemeless:
+
+```yaml
+balemeless:
   auth:
     key: your blameless-key //xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
     url: your blameless base url
   baseUrl: your blameless base url
   interval: 30 // in minutes
-
+```
 
 ## Usage
 
