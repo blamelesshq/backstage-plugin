@@ -42,7 +42,7 @@ export class BlamelessService implements BlamelessAPI {
 
     async getNewToken(): Promise<AuthResponse | null> {
         // get new token from blameless
-        return await fetch(`${this.authUrl}/v2/identity/token`, {
+        return await fetch(`${this.authUrl}/api/v2/identity/token`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
