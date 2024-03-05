@@ -29,6 +29,8 @@ balemeless:
   authKey: your blameless-key //xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
   baseUrl: your blameless base url // https://example.blameless.com
   interval: 30 // in minutes
+  kinds:
+    - Component
 ```
 
 ## Usage

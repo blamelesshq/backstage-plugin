@@ -3,9 +3,11 @@ import { BlamelessAPI, BlamelessConnectionConfig, Service, AuthResponse } from "
 export class BlamelessService implements BlamelessAPI {
     // connection config from env variables
     private readonly authKey: string;  
-    public readonly interval: number;
     private readonly baseurl: string;
     private access_token: string | null;
+
+    public readonly interval: number;
+    public readonly kinds: string[];
 
     connectionConfig: BlamelessConnectionConfig;
     constructor(connectionConfig: BlamelessConnectionConfig) {
@@ -13,6 +15,7 @@ export class BlamelessService implements BlamelessAPI {
         this.authKey = this.connectionConfig.config.getString('blameless.authKey');
         this.interval = this.connectionConfig.config.getNumber('blameless.interval');
         this.baseurl = this.connectionConfig.config.getString('blameless.baseUrl');
+        this.kinds = this.connectionConfig.config.getOptionalStringArray('blameless.kinds') || ["Component"];
         this.access_token = null;
     }
 
