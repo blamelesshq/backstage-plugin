@@ -33,7 +33,6 @@ export class BlamelessJob {
                 type: entity.spec.type || 'other',
             }
         });
-        console.log('services ---- ', services);
         // update blameless services
         await this.blamelessService.updateServices(services);
     }
