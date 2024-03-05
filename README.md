@@ -25,7 +25,7 @@ To utilize the Blameless plugin, please ensure that the following config are add
 
 
 ```yaml
-balemeless:
+blameless:
   authKey: your blameless-key //xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
   baseUrl: your blameless base url // https://example.blameless.com
   interval: 30 // in minutes
