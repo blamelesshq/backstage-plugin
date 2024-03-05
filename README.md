@@ -26,11 +26,11 @@ To utilize the Blameless plugin, please ensure that the following config are add
 
 ```yaml
 balemeless:
-  auth:
-    key: your blameless-key //xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-    url: your blameless base url
-  baseUrl: your blameless base url
+  authKey: your blameless-key //xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+  baseUrl: your blameless base url // https://example.blameless.com
   interval: 30 // in minutes
+  kinds:
+    - Component
 ```
 
 ## Usage

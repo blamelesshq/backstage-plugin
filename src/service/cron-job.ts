@@ -6,14 +6,16 @@ import { BlamelessConnectionConfig, Service } from './types';
 
 export class BlamelessJob {
     private readonly blamelessService: BlamelessService;
+    private readonly catalogClient: CatalogClient;
     constructor(connectionConfig: BlamelessConnectionConfig) {
         this.blamelessService = new BlamelessService(connectionConfig);
+        this.catalogClient = new CatalogClient({ discoveryApi: this.blamelessService.connectionConfig.discovery });
     }
 
     async listCatalog(): Promise<any[]> {
-        // get list of backstage entities
-        const catalogClient = new CatalogClient({ discoveryApi: this.blamelessService.connectionConfig.discovery });
-        const entities = await catalogClient.getEntities();
+        // get list of backstage entities by kind
+        const kinds = this.blamelessService.kinds;
+        const entities = await this.catalogClient.getEntities({ filter: {kind : kinds}});
         return entities.items;
     }
 
