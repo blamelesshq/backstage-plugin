@@ -38,11 +38,14 @@ blameless:
 To use the plugin add the following code to your 
 ``` packages/backend/src/index.ts ```
 
-For the new Backend system to add blameless route
+For the new Backend system
 ```Javascript
 // packages/backend/src/index.ts
 backend.add(import('@backstage/plugin-kubernetes-backend'));
 ```
+
+
+For the old Backend system
 
 ```Javascript
 // packages/backend/src/index.ts
