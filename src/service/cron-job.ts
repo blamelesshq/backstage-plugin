@@ -5,7 +5,7 @@ import { BlamelessConnectionConfig, Service } from './types';
 
 
 export class BlamelessJob {
-    private readonly blamelessService: BlamelessService;
+    public readonly blamelessService: BlamelessService;
     private readonly catalogClient: CatalogClient;
     constructor(connectionConfig: BlamelessConnectionConfig) {
         this.blamelessService = new BlamelessService(connectionConfig);

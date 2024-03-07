@@ -89,5 +89,5 @@ For the old Backend system
   const blamelessEnv = useHotMemoize(module, () => createEnv('blameless'));
   
   ....
-  apiRouter.use('/carmen', await blameless(blamelessEnv));
+  apiRouter.use('/blameless', await blameless(blamelessEnv));
   ```

@@ -1,8 +1,32 @@
 import { getVoidLogger } from '@backstage/backend-common';
 import express from 'express';
 import request from 'supertest';
-
 import { createRouter } from './router';
+
+// mock HostDiscovery
+jest.mock('@backstage/backend-common', () => {
+  const originalModule = jest.requireActual('@backstage/backend-common');
+  return {
+    ...originalModule,
+    HostDiscovery: {
+      fromConfig: jest.fn().mockReturnValue({
+        getBaseUrl: jest.fn().mockReturnValue('mock-base-url'),
+      }),
+    },
+  };
+});
+
+// mock BlamelessJob
+jest.mock('./cron-job', () => {
+  return {
+    BlamelessJob: jest.fn().mockImplementation(() => {
+      return {
+        start: jest.fn(),
+      };
+    }),
+  };
+});
+
 
 describe('createRouter', () => {
   let app: express.Express;
