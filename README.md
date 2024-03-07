@@ -38,14 +38,56 @@ blameless:
 To use the plugin add the following code to your 
 ``` packages/backend/src/index.ts ```
 
-```Javascript
+For the new Backend system
+  ```Javascript
+  // packages/backend/src/index.ts
 
-import {BlamelessJob} from '@blamelesshq/blameless-backstage'
+  import { createBackend } from '@backstage/backend-defaults';
+
+  const backend = createBackend();
+  backend.add(import('@backstage/plugin-app-backend/alpha'));
+  backend.add(import('@backstage/plugin-catalog-backend/alpha'));
+  backend.add(import('@backstage/plugin-scaffolder-backend/alpha'));
+  backend.add(
+    import('@backstage/plugin-catalog-backend-module-scaffolder-entity-model'),
+  );
+  ... 
+  backend.add(import('@blamelesshq/blameless-backstage')); //<<-- Add the blameless plugin 
+  ....
+
+  ```
 
 
-....
- // Run the blameless cronjob in the blameless plugin
-    const blamelessJob = new BlamelessJob({config, logger: getRootLogger(), discovery: HostDiscovery.fromConfig(config)});
-    await blamelessJob.start();
+For the old Backend system
 
-```
+  Create new file under the plugins call it blameless
+  ```Javascript
+  // packages/backend/src/plugins/blameless.ts
+  import {createRouter} from '@blamelesshq/blameless-backstage';
+  import { Router } from 'express';
+  import { PluginEnvironment } from '../types';
+
+  export default async function createPlugin(
+    env: PluginEnvironment,
+  ): Promise<Router> {
+    // Here is where you will add all of the required initialization code that
+    // your backend plugin needs to be able to start!
+
+    // The env contains a lot of goodies, but our router currently only
+    // needs a logger
+    return await createRouter({
+      logger: env.logger,
+    });
+  }
+  ```
+
+  ```Javascript
+  // packages/backend/src/index.ts
+  import blameless from './plugins/blameless';
+
+  ...
+  const blamelessEnv = useHotMemoize(module, () => createEnv('blameless'));
+  
+  ....
+  apiRouter.use('/blameless', await blameless(blamelessEnv));
+  ```

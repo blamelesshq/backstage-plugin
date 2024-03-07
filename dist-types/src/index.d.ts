@@ -1,2 +1,1 @@
-export { BlamelessJob } from './service/crone-job';
-export { createRouter as createBlamelessRouter } from './service/router';
+export { blamelessPlugin as default } from './plugin';

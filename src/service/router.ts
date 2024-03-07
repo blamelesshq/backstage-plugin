@@ -1,7 +1,12 @@
-import { errorHandler } from '@backstage/backend-common';
+import {
+  errorHandler,
+  loadBackendConfig,
+  HostDiscovery,
+} from '@backstage/backend-common';
 import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
+import { BlamelessJob } from './cron-job';
 
 export interface RouterOptions {
   logger: Logger;
@@ -12,10 +17,19 @@ export async function createRouter(
 ): Promise<express.Router> {
   const { logger } = options;
 
+  const config = await loadBackendConfig({
+    argv: process.argv,
+    logger: logger,
+  });
+
   const router = Router();
   router.use(express.json());
 
-  router.get('/health', (_, response) => {
+  // Start the cron job
+  const blamelessJob =new BlamelessJob({config, logger: logger, discovery: HostDiscovery.fromConfig(config)});
+  await blamelessJob.start();
+
+  router.get('/blameless/health', (_, response) => {
     logger.info('PONG!');
     response.json({ status: 'ok' });
   });
