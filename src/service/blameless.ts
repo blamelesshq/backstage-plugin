@@ -3,18 +3,19 @@ import { BlamelessAPI, BlamelessConnectionConfig, Service, AuthResponse } from "
 export class BlamelessService implements BlamelessAPI {
     // connection config from env variables
     private readonly authKey: string;  
-    private readonly authUrl: string; 
-    public readonly interval: number;
     private readonly baseurl: string;
     private access_token: string | null;
+
+    public readonly interval: number;
+    public readonly kinds: string[];
 
     connectionConfig: BlamelessConnectionConfig;
     constructor(connectionConfig: BlamelessConnectionConfig) {
         this.connectionConfig = connectionConfig;
-        this.authKey = this.connectionConfig.config.getString('blameless.auth.key');
-        this.authUrl = this.connectionConfig.config.getString('blameless.auth.url');
+        this.authKey = this.connectionConfig.config.getString('blameless.authKey');
         this.interval = this.connectionConfig.config.getNumber('blameless.interval');
         this.baseurl = this.connectionConfig.config.getString('blameless.baseUrl');
+        this.kinds = this.connectionConfig.config.getOptionalStringArray('blameless.kinds') || ["Component"];
         this.access_token = null;
     }
 
@@ -42,7 +43,7 @@ export class BlamelessService implements BlamelessAPI {
 
     async getNewToken(): Promise<AuthResponse | null> {
         // get new token from blameless
-        return await fetch(`${this.authUrl}/v2/identity/token`, {
+        return await fetch(`${this.baseurl}/api/v2/identity/token`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -92,7 +93,7 @@ export class BlamelessService implements BlamelessAPI {
             },
         })
         .then(response => {
-            if (response.status === 200) {
+            if (response.status === 204) {
                 this.connectionConfig.logger.info('Blameless services updated');
             } else {
                 this.connectionConfig.logger.error('Failed to update blameless services');
