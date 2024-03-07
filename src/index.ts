@@ -1,1 +1,5 @@
-export { blamelessPlugin as default } from './plugin';
+import { blamelessPlugin } from './plugin';
+import { createRouter } from './service/router';
+
+export { blamelessPlugin as default } 
+export {createRouter}

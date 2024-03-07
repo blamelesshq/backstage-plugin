@@ -38,22 +38,56 @@ blameless:
 To use the plugin add the following code to your 
 ``` packages/backend/src/index.ts ```
 
-The blamless backstage backend plugin uses the New Backend System
-```Javascript
-// packages/backend/src/index.ts
+For the new Backend system
+  ```Javascript
+  // packages/backend/src/index.ts
 
-import { createBackend } from '@backstage/backend-defaults';
+  import { createBackend } from '@backstage/backend-defaults';
 
-const backend = createBackend();
-backend.add(import('@backstage/plugin-app-backend/alpha'));
-backend.add(import('@backstage/plugin-catalog-backend/alpha'));
-backend.add(import('@backstage/plugin-scaffolder-backend/alpha'));
-backend.add(
-  import('@backstage/plugin-catalog-backend-module-scaffolder-entity-model'),
-);
-... 
-backend.add(import('@blamelesshq/blameless-backstage')); //<<-- Add the blameless plugin 
-....
+  const backend = createBackend();
+  backend.add(import('@backstage/plugin-app-backend/alpha'));
+  backend.add(import('@backstage/plugin-catalog-backend/alpha'));
+  backend.add(import('@backstage/plugin-scaffolder-backend/alpha'));
+  backend.add(
+    import('@backstage/plugin-catalog-backend-module-scaffolder-entity-model'),
+  );
+  ... 
+  backend.add(import('@blamelesshq/blameless-backstage')); //<<-- Add the blameless plugin 
+  ....
 
-```
+  ```
 
+
+For the old Backend system
+
+  Create new file under the plugins call it blameless
+  ```Javascript
+  // packages/backend/src/plugins/blameless.ts
+  import {createRouter} from '@blamelesshq/blameless-backstage';
+  import { Router } from 'express';
+  import { PluginEnvironment } from '../types';
+
+  export default async function createPlugin(
+    env: PluginEnvironment,
+  ): Promise<Router> {
+    // Here is where you will add all of the required initialization code that
+    // your backend plugin needs to be able to start!
+
+    // The env contains a lot of goodies, but our router currently only
+    // needs a logger
+    return await createRouter({
+      logger: env.logger,
+    });
+  }
+  ```
+
+  ```Javascript
+  // packages/backend/src/index.ts
+  import blameless from './plugins/blameless';
+
+  ...
+  const blamelessEnv = useHotMemoize(module, () => createEnv('blameless'));
+  
+  ....
+  apiRouter.use('/carmen', await blameless(blamelessEnv));
+  ```
