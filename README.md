@@ -38,23 +38,22 @@ blameless:
 To use the plugin add the following code to your 
 ``` packages/backend/src/index.ts ```
 
-For the new Backend system
+The blamless backstage backend plugin uses the New Backend System
 ```Javascript
 // packages/backend/src/index.ts
-backend.add(import('@backstage/plugin-kubernetes-backend'));
-```
 
+import { createBackend } from '@backstage/backend-defaults';
 
-For the old Backend system
-
-```Javascript
-// packages/backend/src/index.ts
-import {BlamelessJob} from '@blamelesshq/blameless-backstage'
-
-
+const backend = createBackend();
+backend.add(import('@backstage/plugin-app-backend/alpha'));
+backend.add(import('@backstage/plugin-catalog-backend/alpha'));
+backend.add(import('@backstage/plugin-scaffolder-backend/alpha'));
+backend.add(
+  import('@backstage/plugin-catalog-backend-module-scaffolder-entity-model'),
+);
+... 
+backend.add(import('@blamelesshq/blameless-backstage')); //<<-- Add the blameless plugin 
 ....
- // Run the blameless cronjob in the blameless plugin
-    const blamelessJob = new BlamelessJob({config, logger: getRootLogger(), discovery: HostDiscovery.fromConfig(config)});
-    await blamelessJob.start();
 
 ```
+
