@@ -38,6 +38,10 @@ jobs:
         uses: borales/actions-yarn@v4
         with:
           cmd: install --frozen-lockfile
+      - name: Generate Types
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: tsc
       - name: Build
         uses: borales/actions-yarn@v4
         with:
