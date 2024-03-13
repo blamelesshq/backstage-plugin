@@ -38,7 +38,7 @@ blameless:
 To use the plugin add the following code to your 
 ``` packages/backend/src/index.ts ```
 
-For the new Backend system
+#### For the new Backend system
   ```Javascript
   // packages/backend/src/index.ts
 
@@ -58,7 +58,7 @@ For the new Backend system
   ```
 
 
-For the old Backend system
+#### For the old Backend system
 
   Create new file under the plugins call it blameless
   ```Javascript
@@ -80,7 +80,7 @@ For the old Backend system
     });
   }
   ```
-
+  Add the following the index file
   ```Javascript
   // packages/backend/src/index.ts
   import blameless from './plugins/blameless';
