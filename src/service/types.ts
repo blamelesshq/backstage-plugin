@@ -1,15 +1,9 @@
 import { Config } from '@backstage/config';
+import { Entity } from '@backstage/catalog-model';
 import {Logger} from 'winston';
 import {
   PluginEndpointDiscovery,
 } from '@backstage/backend-common';
-
-export type Service = {
-  name: string;
-  kind: string;
-  namespace: string;
-  type: string;
-}
 
 
 export type AuthResponse = {
@@ -22,7 +16,7 @@ export type AuthResponse = {
 export  interface  BlamelessAPI {
     checkTokenExpiry: () => Promise<string | null>;
     getNewToken: () => Promise<AuthResponse | null>;
-    updateServices: (services: Service[]) => Promise<void>;
+    updateServices: (entities: Entity[]) => Promise<void>;
 }
 
 export type BlamelessConnectionConfig = {
