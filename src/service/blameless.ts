@@ -85,9 +85,7 @@ export class BlamelessService implements BlamelessAPI {
         // update blameless services
         return await fetch(`${this.baseurl}/api/v2/integrations/services/backstage`, {
             method: 'PUT',
-            body: JSON.stringify({
-                entities,
-            }),
+            body: JSON.stringify(entities),
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
