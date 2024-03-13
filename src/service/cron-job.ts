@@ -1,7 +1,7 @@
 import { CatalogClient } from '@backstage/catalog-client';
 import { BlamelessService } from './blameless';
 import { TaskScheduler } from '@backstage/backend-tasks';
-import { BlamelessConnectionConfig, Service } from './types';
+import { BlamelessConnectionConfig } from './types';
 
 
 export class BlamelessJob {
@@ -24,17 +24,8 @@ export class BlamelessJob {
         this.blamelessService.connectionConfig.logger.info('Updating blameless services');
         // get list of entities
         const entities = await this.listCatalog();
-        // map entities to services
-        const services: Service[] = entities.map((entity: any) => {
-            return {
-                name: entity.metadata.name,
-                kind: entity.kind,
-                namespace: entity.metadata.namespace || 'default',
-                type: entity.spec.type || 'other',
-            }
-        });
         // update blameless services
-        await this.blamelessService.updateServices(services);
+        await this.blamelessService.updateServices(entities);
     }
     
     async start(): Promise<void> {
