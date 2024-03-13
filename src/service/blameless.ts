@@ -100,7 +100,6 @@ export class BlamelessService implements BlamelessAPI {
         })
         .catch(error => {
             this.connectionConfig.logger.error(error);
-            throw new Error('Failed to update blameless services');
         });
     }
 }
