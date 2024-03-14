@@ -12,6 +12,10 @@
     "type": "git",
     "url": "git+https://github.com/blamelesshq/backstage-plugin.git"
   },
+  "keywords": [
+    "Blameless",
+    "Backstage"
+  ],
   "scripts": {
     "start": "backstage-cli package start",
     "build": "backstage-cli package build",
