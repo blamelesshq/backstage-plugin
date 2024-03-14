@@ -60,12 +60,7 @@ describe('BlamelessJob', () => {
         await job.updateBlamelessServices();
 
         expect(job.blamelessService.connectionConfig.logger.info).toHaveBeenCalledWith('Updating blameless services');
-        expect(job.blamelessService.updateServices).toHaveBeenCalledWith(entities.map(entity => ({
-            name: entity.metadata.name,
-            kind: entity.kind,
-            namespace: entity.metadata.namespace || 'default',
-            type: entity.spec.type || 'other',
-        })));
+        expect(job.blamelessService.updateServices).toHaveBeenCalledWith(entities);
     });
 
     it('should start cron job', async () => {
