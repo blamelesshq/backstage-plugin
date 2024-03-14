@@ -1,4 +1,5 @@
-import { BlamelessAPI, BlamelessConnectionConfig, Service, AuthResponse } from "./types";
+import { Entity } from "@backstage/catalog-model";
+import { BlamelessAPI, BlamelessConnectionConfig, AuthResponse } from "./types";
 
 export class BlamelessService implements BlamelessAPI {
     // connection config from env variables
@@ -65,7 +66,7 @@ export class BlamelessService implements BlamelessAPI {
         });
     };
 
-    async updateServices(services: Service[]): Promise<void> {
+    async updateServices(entities: Entity[]): Promise<void> {
         // update blameless services
         let token: string;
         const tokenData = await this.checkTokenExpiry();
@@ -84,9 +85,7 @@ export class BlamelessService implements BlamelessAPI {
         // update blameless services
         return await fetch(`${this.baseurl}/api/v2/integrations/services/backstage`, {
             method: 'PUT',
-            body: JSON.stringify({
-                services,
-            }),
+            body: JSON.stringify(entities),
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
@@ -101,7 +100,6 @@ export class BlamelessService implements BlamelessAPI {
         })
         .catch(error => {
             this.connectionConfig.logger.error(error);
-            throw new Error('Failed to update blameless services');
         });
     }
 }
