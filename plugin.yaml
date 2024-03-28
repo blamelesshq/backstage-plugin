@@ -10,3 +10,4 @@ frontend:
   routePath: /blameless
 backend:
   enableBackend: true
+  dangerouslyDisableDefaultAuthPolicy: true

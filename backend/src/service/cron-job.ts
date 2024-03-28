@@ -15,8 +15,14 @@ export class BlamelessJob {
     async listCatalog(): Promise<any[]> {
         // get list of backstage entities by kind
         const kinds = this.blamelessService.kinds;
-        const entities = await this.catalogClient.getEntities({ filter: {kind : kinds}});
-        return entities.items;
+        try{
+            const entities = await this.catalogClient.getEntities({ filter: {kind : kinds}});
+            return entities.items;
+        } catch (error) {
+            console.log('error --- ', error);
+            this.blamelessService.connectionConfig.logger.error('Error fetching entities from catalog', error);
+            return [];
+        }
     }
 
     async updateBlamelessServices(): Promise<void> {

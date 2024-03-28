@@ -7,9 +7,15 @@ import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
 import { BlamelessJob } from './cron-job';
+import { DiscoveryService, RootConfigService } from '@backstage/backend-plugin-api';
+
 
 export interface RouterOptions {
   logger: Logger;
+  discovery?: DiscoveryService;
+  config?: RootConfigService;
+  auth?: any;
+  httpAuth?: any;
 }
 
 export async function createRouter(

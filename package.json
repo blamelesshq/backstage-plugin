@@ -1,13 +1,15 @@
 {
     "name": "@blamelesshq/blameless-backstage",
-    "version": "1.0.0",
+    "version": "0.1.29",
+    "author": "Blameless",
+    "license": "ISC",
     "scripts": {
       "build": "npm run build:frontend && npm run build:backend",
       "build:frontend": "cd frontend && npm run build",
       "build:backend": "cd backend && npm run build"
     },
     "devDependencies": {
-      "@blamelesshq/blameless-backstage-frontend": "1.0.0",
-      "@blamelesshq/blameless-backstage-backend": "1.0.0"
+      "@blamelesshq/blameless-backstage-frontend": "0.1.0",
+      "@blamelesshq/blameless-backstage-backend": "0.1.0"
     }
   }
