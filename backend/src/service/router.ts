@@ -39,6 +39,11 @@ export async function createRouter(
     logger.info('PONG!');
     response.json({ status: 'ok' });
   });
+  // add router for blameless incidents
+  router.get('/blameless/incidents', async (_, response) => {
+    const incidents = await blamelessJob.blamelessService.getIncidents();
+    response.json(incidents);
+  });
 
   router.use(errorHandler());
   return router;
