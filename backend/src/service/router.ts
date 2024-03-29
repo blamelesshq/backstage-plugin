@@ -35,12 +35,12 @@ export async function createRouter(
   const blamelessJob =new BlamelessJob({config, logger: logger, discovery: HostDiscovery.fromConfig(config)});
   await blamelessJob.start();
 
-  router.get('/blameless/health', (_, response) => {
+  router.get('/health', (_, response) => {
     logger.info('PONG!');
     response.json({ status: 'ok' });
   });
   // add router for blameless incidents
-  router.get('/blameless/incidents', async (_, response) => {
+  router.get('/incidents', async (_, response) => {
     const incidents = await blamelessJob.blamelessService.getIncidents();
     response.json(incidents);
   });

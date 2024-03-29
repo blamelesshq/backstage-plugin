@@ -1,5 +1,11 @@
 import { Entity } from "@backstage/catalog-model";
-import { BlamelessAPI, BlamelessConnectionConfig, AuthResponse, BlamelessIncident } from "./types";
+import {
+    BlamelessAPI,
+    BlamelessConnectionConfig,
+    AuthResponse,
+    BlamelessIncident,
+    IncidentResponse
+} from "./types";
 
 export class BlamelessService implements BlamelessAPI {
     // connection config from env variables
@@ -103,6 +109,67 @@ export class BlamelessService implements BlamelessAPI {
         });
     }
 
+    async fetchIncidents(limit: number, offset: number, token: string): Promise<IncidentResponse> {
+        // fetch incidents from blameless
+        return await fetch(`${this.baseurl}/api/v1/incidents?limit=${limit}&offset=${offset}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+        })
+        .then(async response => {
+            if (response.status === 200) {
+                const data:IncidentResponse = await response.json();
+                // format the date to file BlamelessIncident type
+                const incidents: BlamelessIncident[] = [];
+                data.incidents.forEach((incident: any) => {
+                    const formattedIncident = {
+                        id: incident._id,
+                        title: incident.description,
+                        status: incident.status,
+                        severity: incident.severity,
+                        incident_type: incident.type,
+                        created: incident.created.$date,
+                        postmortem_url: incident.is_postmortem_required?
+                            `${this.baseurl}/retrospective/${incident._id}`: null,
+                        incident_url: `${this.baseurl}/incident/${incident._id}/events`
+                    };
+                    incidents.push(formattedIncident);
+                });
+                return {
+                    ok: data.ok,
+                    incidents: incidents,
+                    pagination: {
+                        limit: data.pagination.limit,
+                        offset: data.pagination.offset,
+                    }
+                };
+            }
+            this.connectionConfig.logger.error('Failed to get incidents! Error: ', response);
+            return {
+                ok: false,
+                incidents: [],
+                pagination: {
+                    limit: 0,
+                    offset: 0,
+                }
+            };
+        })
+        .catch(error => {
+            this.connectionConfig.logger.error(error);
+            return {
+                ok: false,
+                incidents: [],
+                pagination: {
+                    limit: 0,
+                    offset: 0,
+                }
+            };
+        });
+    }
+
+
     async getIncidents(): Promise<BlamelessIncident[]> {
         // get incidents from blameless
         let token: string;
@@ -119,39 +186,29 @@ export class BlamelessService implements BlamelessAPI {
                 this.access_token = token;
             }
         }
-        return await fetch(`${this.baseurl}/api/v1/incidents`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-        })
-        .then(async response => {
-            if (response.status === 200) {
-                const data = await response.json();
-                this.connectionConfig.logger.info('Incidents received');
-                // format the date to file BlamelessIncident type
-                const incidents: BlamelessIncident[] = [];
-                data.forEach((incident: any) => {
-                    const formattedIncident = {
-                        id: incident._id,
-                        title: incident.summary,
-                        status: incident.status,
-                        severity: incident.severity,
-                        incident_type: incident.type,
-                        created_at: incident.created.$date,
-                        postmortem_url: `${this.baseurl}/retrospective/${incident._id}`
-                    };
-                    incidents.push(formattedIncident);
-                });
-                return incidents;
+        // get paginated incidents
+        const limit = 100;
+        let offset = 0;
+        const response = await this.fetchIncidents(limit, offset, token);
+        if (response.ok) {
+            offset = response.pagination.offset;
+            const incidents: BlamelessIncident[] = response.incidents;
+            // check if there are more incidents
+            while (incidents.length > offset) {
+                this.connectionConfig.logger.info(`Paginated incidents found! Fetched incidents : ${incidents.length}`);
+                const nextResponse = await this.fetchIncidents(limit, offset, token);
+                if (nextResponse.ok && nextResponse.incidents.length > 0) {
+                    incidents.push(...nextResponse.incidents);
+                    offset += limit;
+                } else {
+                    break;
+                }
             }
-            this.connectionConfig.logger.error('Failed to get incidents');
-            return [];
-        })
-        .catch(error => {
-            this.connectionConfig.logger.error(error);
-            return [];
-        });
+            return incidents;
+        }
+         // log error if failed to get incidents
+        this.connectionConfig.logger.error('Failed to get incidents! Error: ', response);
+        return [];
+
     }
 }

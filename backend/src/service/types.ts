@@ -11,8 +11,18 @@ export type BlamelessIncident = {
   status: string,
   severity: string,
   incident_type: string,
-  created_at: string,
-  postmortem_url: string,
+  created: string,
+  postmortem_url: string | null,
+  incident_url: string,
+};
+
+export type IncidentResponse = {
+  ok: boolean;
+  incidents: BlamelessIncident[];
+  pagination: {
+    limit: number;
+    offset: number;
+  };
 };
 
 export type AuthResponse = {

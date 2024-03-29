@@ -1,5 +1,5 @@
+import React from 'react';
 import { createPlugin, createRoutableExtension } from '@backstage/core-plugin-api';
-
 import { rootRouteRef } from './routes';
 
 export const blamelessuiPlugin = createPlugin({
@@ -9,11 +9,12 @@ export const blamelessuiPlugin = createPlugin({
   },
 });
 
+
 export const BlamelessuiPage = blamelessuiPlugin.provide(
   createRoutableExtension({
-    name: 'BlamelessuiPage',
+    name: 'BlamelessPage',
     component: () =>
-      import('./components/ExampleComponent').then(m => m.ExampleComponent),
+      import('./components/Blameless').then(m => m.IncidentComponent),
     mountPoint: rootRouteRef,
   }),
 );

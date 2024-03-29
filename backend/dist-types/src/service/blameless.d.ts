@@ -1,4 +1,5 @@
-import { BlamelessAPI, BlamelessConnectionConfig, Service, AuthResponse } from "./types";
+import { Entity } from "@backstage/catalog-model";
+import { BlamelessAPI, BlamelessConnectionConfig, AuthResponse, BlamelessIncident } from "./types";
 export declare class BlamelessService implements BlamelessAPI {
     private readonly authKey;
     private readonly baseurl;
@@ -9,5 +10,6 @@ export declare class BlamelessService implements BlamelessAPI {
     constructor(connectionConfig: BlamelessConnectionConfig);
     checkTokenExpiry(): Promise<string | null>;
     getNewToken(): Promise<AuthResponse | null>;
-    updateServices(services: Service[]): Promise<void>;
+    updateServices(entities: Entity[]): Promise<void>;
+    getIncidents(): Promise<BlamelessIncident[]>;
 }

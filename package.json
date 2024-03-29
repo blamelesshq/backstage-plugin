@@ -9,7 +9,7 @@
       "build:backend": "cd backend && npm run build"
     },
     "devDependencies": {
-      "@blamelesshq/blameless-backstage-frontend": "0.1.0",
-      "@blamelesshq/blameless-backstage-backend": "0.1.0"
+      "@blamelesshq/blameless-backstage-frontend": "link:frontend",
+      "@blamelesshq/blameless-backstage-backend": "link:backend"
     }
   }

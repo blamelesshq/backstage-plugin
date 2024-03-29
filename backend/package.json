@@ -34,6 +34,7 @@
     "@backstage/plugin-permission-common": "^0.7.12",
     "@backstage/test-utils": "^1.5.0",
     "@types/express": "*",
+    "@types/jasmine": "^5.1.4",
     "backstage-cli": "^1.0.0-alpha.2",
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
