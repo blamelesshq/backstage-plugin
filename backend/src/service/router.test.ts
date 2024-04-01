@@ -18,10 +18,25 @@ jest.mock('@backstage/backend-common', () => {
 
 // mock BlamelessJob
 jest.mock('./cron-job', () => {
+  const mocked_incidents = [
+    {
+      id: '1',
+      title: 'mock-title',
+      status: 'mock-status',
+      severity: 'mock-severity',
+      incident_type: 'mock-incident-type',
+      created: 'mock-created',
+      postmortem_url: 'mock-postmortem-url',
+      incident_url: 'mock-incident-url',
+    },
+  ]
   return {
     BlamelessJob: jest.fn().mockImplementation(() => {
       return {
         start: jest.fn(),
+        blamelessService: {
+          getIncidents: jest.fn().mockResolvedValue(mocked_incidents),
+        },
       };
     }),
   };
@@ -42,12 +57,19 @@ describe('createRouter', () => {
     jest.resetAllMocks();
   });
 
-  describe('GET /blameless/health', () => {
+  describe('GET /health', () => {
     it('returns ok', async () => {
-      const response = await request(app).get('/blameless/health');
+      const response = await request(app).get('/health');
 
       expect(response.status).toEqual(200);
       expect(response.body).toEqual({ status: 'ok' });
+    });
+  });
+  describe('GET /incidents', () => {
+    it('returns ok', async () => {
+      const response = await request(app).get('/incidents');
+
+      expect(response.status).toEqual(200);
     });
   });
 });
