@@ -34,37 +34,42 @@ export const DenseTable = ({ incidents }: DenseTableProps) => {
   const classes = useStyles();
 
   const columns: TableColumn[] = [
-    { title: 'ID', field: 'id' },
-    { title: 'Title', field: 'title' },
-    { title: 'Type', field: 'type' },
-    { title: 'Severity', field: 'severity' },
-    { title: 'Status', field: 'status' },
-    { title: 'Created', field: 'created' },
-    { title: 'Postmortem', field: 'postmortem' },
+    { title: 'ID', field: 'id', width: '8%'},
+    { title: 'Postmortem', field: 'postmortem', width: '8%'},
+    { title: 'Title', field: 'title', width: '30%'},
+    { title: 'Type', field: 'type', width: '10%'},
+    { title: 'Severity', field: 'severity', width: '10%'},
+    { title: 'Status', field: 'status', width: '14%'},
+    { title: 'Created', field: 'created', width: '20%'},
   ];
 
   const data = incidents.map(incident => {
     return {
-      id: <a href={incident.incident_url} target='blank' className={classes.link}>{incident.id}</a>,
+      id: <a href={incident.incident_url} target='blank' className={classes.link}>INC-{incident.id}</a>,
+      postmortem: incident.postmortem_url?
+      <a href={incident.postmortem_url} target='blank' className={classes.link}>RS-{incident.id}</a>
+      : 'N/A',
       title: incident.title,
       type: incident.incident_type,
       severity: incident.severity,
       status: incident.status,
       created: new Date(incident.created).toLocaleString(),
-      postmortem: incident.postmortem_url?
-        <a href={incident.postmortem_url} target='blank' className={classes.link}>{incident.id}</a>
-        : 'N/A',
     };
   });
-
   return (
-    <Table
-      title="Incidents"
-      options={{ search: true, paging: true, pageSize: 20}}
-      columns={columns}
-      data={data}
-    />
-  );
+      <Table
+        title="Incidents"
+        options={{
+          search: true,
+          paging: true,
+          pageSize: 20,
+          paginationType:'normal',
+          columnResizable: true,
+        }}
+        columns={columns}
+        data={data || []}
+      />
+    );
 };
 
 export const IncidentFetchComponent = () => {
@@ -73,7 +78,8 @@ export const IncidentFetchComponent = () => {
     // fetch blameless incidents
     const backendUrl = config.getString('backend.baseUrl');
     const response = await fetch(`${backendUrl}/api/blameless/incidents`);
-    return response.json();
+    console.log('get incidents ----- ', response);
+    return response?.json() || [];
   }, []);
 
   if (loading) {

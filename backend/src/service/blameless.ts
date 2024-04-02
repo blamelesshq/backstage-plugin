@@ -101,7 +101,8 @@ export class BlamelessService implements BlamelessAPI {
             if (response.status === 204) {
                 this.connectionConfig.logger.info('Blameless services updated');
             } else {
-                this.connectionConfig.logger.error('Failed to update blameless services');
+                console.log(response);
+                this.connectionConfig.logger.error('Failed to update blameless services, Error: ' , response);
             }
         })
         .catch(error => {
@@ -121,6 +122,7 @@ export class BlamelessService implements BlamelessAPI {
         .then(async response => {
             if (response.status === 200) {
                 const data:IncidentResponse = await response.json();
+                console.log('pagination ------- ', data.pagination);
                 // format the date to file BlamelessIncident type
                 const incidents: BlamelessIncident[] = [];
                 data.incidents.forEach((incident: any) => {
@@ -170,7 +172,7 @@ export class BlamelessService implements BlamelessAPI {
     }
 
 
-    async getIncidents(): Promise<BlamelessIncident[]> {
+    async getIncidents(page: number = 0): Promise<BlamelessIncident[]> {
         // get incidents from blameless
         let token: string;
         const tokenData = await this.checkTokenExpiry();
@@ -188,23 +190,10 @@ export class BlamelessService implements BlamelessAPI {
         }
         // get paginated incidents
         const limit = 100;
-        let offset = 0;
+        const offset = page * limit;
         const response = await this.fetchIncidents(limit, offset, token);
         if (response.ok) {
-            offset = response.pagination.offset;
-            const incidents: BlamelessIncident[] = response.incidents;
-            // check if there are more incidents
-            while (incidents.length > offset) {
-                this.connectionConfig.logger.info(`Paginated incidents found! Fetched incidents : ${incidents.length}`);
-                const nextResponse = await this.fetchIncidents(limit, offset, token);
-                if (nextResponse.ok && nextResponse.incidents.length > 0) {
-                    incidents.push(...nextResponse.incidents);
-                    offset += limit;
-                } else {
-                    break;
-                }
-            }
-            return incidents;
+            return response.incidents;
         }
          // log error if failed to get incidents
         this.connectionConfig.logger.error('Failed to get incidents! Error: ', response);

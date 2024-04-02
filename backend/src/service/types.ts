@@ -22,6 +22,7 @@ export type IncidentResponse = {
   pagination: {
     limit: number;
     offset: number;
+    count?: number;
   };
 };
 
@@ -36,7 +37,7 @@ export  interface  BlamelessAPI {
     checkTokenExpiry: () => Promise<string | null>;
     getNewToken: () => Promise<AuthResponse | null>;
     updateServices: (entities: Entity[]) => Promise<void>;
-    getIncidents: () => Promise<BlamelessIncident[]>;
+    getIncidents: (page: number) => Promise<BlamelessIncident[]>;
 }
 
 export type BlamelessConnectionConfig = {

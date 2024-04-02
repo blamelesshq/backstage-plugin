@@ -1,27 +1,30 @@
+
 import { CatalogClient } from '@backstage/catalog-client';
 import { BlamelessService } from './blameless';
 import { TaskScheduler } from '@backstage/backend-tasks';
 import { BlamelessConnectionConfig } from './types';
-
 
 export class BlamelessJob {
     public readonly blamelessService: BlamelessService;
     private readonly catalogClient: CatalogClient;
     constructor(connectionConfig: BlamelessConnectionConfig) {
         this.blamelessService = new BlamelessService(connectionConfig);
-        this.catalogClient = new CatalogClient({ discoveryApi: this.blamelessService.connectionConfig.discovery });
+        this.catalogClient =  new CatalogClient({ discoveryApi: this.blamelessService.connectionConfig.discovery });
     }
 
-    async listCatalog(): Promise<any[]> {
+    async listCatalog(): Promise<any> {
         // get list of backstage entities by kind
         const kinds = this.blamelessService.kinds;
         try{
-            const entities = await this.catalogClient.getEntities({ filter: {kind : kinds}});
-            return entities.items;
+            const entities = await  this.catalogClient.getEntities({
+                filter: {
+                    kind: kinds,
+                },
+            });
+            return entities;
         } catch (error) {
-            console.log('error --- ', error);
             this.blamelessService.connectionConfig.logger.error('Error fetching entities from catalog', error);
-            return [];
+            return error;
         }
     }
 
@@ -31,7 +34,11 @@ export class BlamelessJob {
         // get list of entities
         const entities = await this.listCatalog();
         // update blameless services
-        await this.blamelessService.updateServices(entities);
+        if (entities?.items){
+            await this.blamelessService.updateServices(entities);
+        } else {
+            this.blamelessService.connectionConfig.logger.info('Failed to get entities from catalog');
+        }
     }
     
     async start(): Promise<void> {

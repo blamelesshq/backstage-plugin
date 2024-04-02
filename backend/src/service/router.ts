@@ -31,18 +31,23 @@ export async function createRouter(
   const router = Router();
   router.use(express.json());
 
-  // Start the cron job
-  const blamelessJob =new BlamelessJob({config, logger: logger, discovery: HostDiscovery.fromConfig(config)});
-  await blamelessJob.start();
+  
+  if (config.has('blameless')) {
+    // Start the cron job only if the config is provided
+    const blamelessJob =new BlamelessJob({config, logger: logger, discovery: HostDiscovery.fromConfig(config)});
+    await blamelessJob.start();
+    // add router for blameless incidents
+    router.get('/incidents', async (_, response) => {
+      const incidents = await blamelessJob.blamelessService.getIncidents();
+      response.json(incidents);
+    });
+  } else {
+    logger.info('Missing config values, Blameless cron job is not started');
+  }
 
   router.get('/health', (_, response) => {
     logger.info('PONG!');
     response.json({ status: 'ok' });
-  });
-  // add router for blameless incidents
-  router.get('/incidents', async (_, response) => {
-    const incidents = await blamelessJob.blamelessService.getIncidents();
-    response.json(incidents);
   });
 
   router.use(errorHandler());
