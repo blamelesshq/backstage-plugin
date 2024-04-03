@@ -13,9 +13,11 @@ export class BlamelessJob {
     async listCatalog(): Promise<any> {
         // get list of backstage entities by kind
         const kinds = this.blamelessService.kinds;
-        // get token from app-config file
-        // const token = this.blamelessService.connectionConfig.config.getString('backend.auth.keys[0].secret');
-        const tokenManager = ServerTokenManager.fromConfig(this.blamelessService.connectionConfig.config, { logger: this.blamelessService.connectionConfig.logger });
+        // get token
+        const tokenManager = ServerTokenManager.fromConfig(
+            this.blamelessService.connectionConfig.config,
+            { logger: this.blamelessService.connectionConfig.logger }
+        );
         const token = await tokenManager.getToken();
         try{
             const entities = await this.blamelessService.connectionConfig.catalogClient.getEntities({
