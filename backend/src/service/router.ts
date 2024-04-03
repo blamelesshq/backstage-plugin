@@ -7,12 +7,17 @@ import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
 import { BlamelessJob } from './cron-job';
+import { CatalogClient } from '@backstage/catalog-client';
 import { DiscoveryService, RootConfigService } from '@backstage/backend-plugin-api';
+import { FetchApi } from '@backstage/core-plugin-api';
 
 
 export interface RouterOptions {
   logger: Logger;
   discovery?: DiscoveryService;
+  catalogClient?: CatalogClient;
+  fetchApi?: FetchApi;
+  permissions?: string[];
   config?: RootConfigService;
   auth?: any;
   httpAuth?: any;
@@ -21,7 +26,7 @@ export interface RouterOptions {
 export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
-  const { logger } = options;
+  const { logger, fetchApi } = options;
 
   const config = await loadBackendConfig({
     argv: process.argv,
@@ -34,7 +39,11 @@ export async function createRouter(
   
   if (config.has('blameless')) {
     // Start the cron job only if the config is provided
-    const blamelessJob =new BlamelessJob({config, logger: logger, discovery: HostDiscovery.fromConfig(config)});
+    const catalogApi = new CatalogClient({
+      discoveryApi: HostDiscovery.fromConfig(config),
+      fetchApi: fetchApi,
+    });
+    const blamelessJob =new BlamelessJob({config, logger: logger, discovery: HostDiscovery.fromConfig(config), catalogClient: catalogApi});
     await blamelessJob.start();
     // add router for blameless incidents
     router.get('/incidents', async (_, response) => {

@@ -1,1 +1,1 @@
-export { ExampleFetchComponent } from './IncidentFetchComponent';
+export { IncidentFetchComponent } from './IncidentFetchComponent';

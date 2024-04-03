@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Table, TableColumn, Progress, ResponseErrorPanel } from '@backstage/core-components';
-import useAsync from 'react-use/lib/useAsync';;
+import useAsync from 'react-use/lib/useAsync';
 import { useApi, configApiRef } from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles({
@@ -78,7 +78,6 @@ export const IncidentFetchComponent = () => {
     // fetch blameless incidents
     const backendUrl = config.getString('backend.baseUrl');
     const response = await fetch(`${backendUrl}/api/blameless/incidents`);
-    console.log('get incidents ----- ', response);
     return response?.json() || [];
   }, []);
 

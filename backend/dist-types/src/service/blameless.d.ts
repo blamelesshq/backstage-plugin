@@ -1,5 +1,5 @@
 import { Entity } from "@backstage/catalog-model";
-import { BlamelessAPI, BlamelessConnectionConfig, AuthResponse, BlamelessIncident } from "./types";
+import { BlamelessAPI, BlamelessConnectionConfig, AuthResponse, BlamelessIncident, IncidentResponse } from "./types";
 export declare class BlamelessService implements BlamelessAPI {
     private readonly authKey;
     private readonly baseurl;
@@ -11,5 +11,6 @@ export declare class BlamelessService implements BlamelessAPI {
     checkTokenExpiry(): Promise<string | null>;
     getNewToken(): Promise<AuthResponse | null>;
     updateServices(entities: Entity[]): Promise<void>;
-    getIncidents(): Promise<BlamelessIncident[]>;
+    fetchIncidents(limit: number, offset: number, token: string): Promise<IncidentResponse>;
+    getIncidents(page?: number): Promise<BlamelessIncident[]>;
 }

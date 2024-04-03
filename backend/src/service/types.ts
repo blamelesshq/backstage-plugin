@@ -1,4 +1,5 @@
 import { Config } from '@backstage/config';
+import { CatalogClient } from '@backstage/catalog-client';
 import { Entity } from '@backstage/catalog-model';
 import {Logger} from 'winston';
 import {
@@ -43,5 +44,6 @@ export  interface  BlamelessAPI {
 export type BlamelessConnectionConfig = {
   logger: Logger;
   config: Config;
+  catalogClient: CatalogClient;
   discovery: PluginEndpointDiscovery;
 };

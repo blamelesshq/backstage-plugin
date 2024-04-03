@@ -15,8 +15,7 @@ export const IncidentComponent = () => (
       <HeaderLabel label="Owner" value="Blameless" />
     </Header>
     <Content>
-      <ContentHeader title="Blameless Incidents">
-      </ContentHeader>
+      <ContentHeader title="Blameless Incidents"/>
       <Grid container spacing={3} direction="column">
         <Grid item>
           <IncidentFetchComponent />

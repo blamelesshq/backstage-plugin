@@ -14,13 +14,18 @@ import {
     register(env) {
       env.registerInit({
         deps: {
-            logger: coreServices.logger,
-            http: coreServices.httpRouter,
+          logger: coreServices.logger,
+          config: coreServices.rootConfig,
+          discovery: coreServices.discovery,
+          http: coreServices.httpRouter,
         },
-        async init({ http, logger}) {
+        async init({ http, logger, config, discovery}) {
+          http.addAuthPolicy({ path: '/', allow: 'unauthenticated', });
           http.use(
             await createRouter({
                 logger: loggerToWinstonLogger(logger),
+                discovery: discovery,
+                config: config,
             }),
           );
         },
