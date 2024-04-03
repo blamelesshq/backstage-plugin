@@ -39,9 +39,8 @@ blameless:
   To use the plugin add the following code to your 
   ``` packages/app/src/components/Root/Root.tsx ```
 
-    ```Javascript
+  ```Javascript
     // packages/app/src/components/Root/Root.tsx
-    ...
   import {BlamelessLogo} from '@blamelesshq/blameless-backstage/frontend';
 
     export const Root = ({ children }: PropsWithChildren<{}>) => (
@@ -49,15 +48,14 @@ blameless:
     <SidebarItem icon={BlamelessLogo} to="blameless" text="Blameless" />; //<<-- Add the blameless plugin 
     ....
     );
-    ```
+  ```
 
 
   and add the following: 
   ``` packages/app/src/App.tsx ```
 
-    ```Javascript
-    // packages/app/src/App.tsx
-    ...
+  ```Javascript
+  // packages/app/src/App.tsx
   import {BlamelessuiPage} from '@blamelesshq/blameless-backstage/frontend';
 
     const routes = (
@@ -67,7 +65,7 @@ blameless:
     )
     ....
 
-    ```
+  ```
 
 
 ### Backend-End
