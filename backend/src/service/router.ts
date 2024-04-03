@@ -46,8 +46,10 @@ export async function createRouter(
     const blamelessJob =new BlamelessJob({config, logger: logger, discovery: HostDiscovery.fromConfig(config), catalogClient: catalogApi});
     await blamelessJob.start();
     // add router for blameless incidents
-    router.get('/incidents', async (_, response) => {
-      const incidents = await blamelessJob.blamelessService.getIncidents();
+    router.get('/incidents', async (req, response) => {
+      const page = Number(req.query.page) || 0;
+      const limit = Number(req.query.limit) || 100;
+      const incidents = await blamelessJob.blamelessService.getIncidents(page, limit);
       response.json(incidents);
     });
   } else {

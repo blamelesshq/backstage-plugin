@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Table, TableColumn, Progress, ResponseErrorPanel } from '@backstage/core-components';
 import useAsync from 'react-use/lib/useAsync';
@@ -28,11 +28,16 @@ type BlamelessIncident = {
 
 type DenseTableProps = {
   incidents: BlamelessIncident[];
+  pagination:{
+    page: number;
+    limit: number;
+    count: number;
+  };
+  setPagination: (pagination: {page: number, limit: number, count:number}) => void;
 };
 
-export const DenseTable = ({ incidents }: DenseTableProps) => {
+export const DenseTable = ({ incidents, pagination, setPagination }: DenseTableProps) => {
   const classes = useStyles();
-
   const columns: TableColumn[] = [
     { title: 'ID', field: 'id', width: '8%'},
     { title: 'Postmortem', field: 'postmortem', width: '8%'},
@@ -56,28 +61,54 @@ export const DenseTable = ({ incidents }: DenseTableProps) => {
       created: new Date(incident.created).toLocaleString(),
     };
   });
+
+  const stateChanged = (val: number) => {
+    setPagination({
+      ...pagination,
+      page: val
+    });
+  };
   return (
+    <>
       <Table
         title="Incidents"
         options={{
           search: false,
-          paging: false,
+          paging: true,
           columnResizable: true,
+          pageSize: pagination.limit,
         }}
         columns={columns}
         data={data || []}
-      />
+        onPageChange={(page) => stateChanged(page)}
+        totalCount={pagination.count}
+        page={pagination.page}
+        />
+      </>
     );
 };
 
 export const IncidentFetchComponent = () => {
+  const [pagination, setPagination] = useState({
+    page: 0,
+    limit:20,
+    count: 0,
+  });
   const config = useApi(configApiRef);
   const { value, loading, error } = useAsync(async (): Promise<BlamelessIncident[]> => {
     // fetch blameless incidents
     const backendUrl = config.getString('backend.baseUrl');
-    const response = await fetch(`${backendUrl}/api/blameless/incidents`);
-    return response?.json() || [];
-  }, []);
+    const response = await fetch(`${backendUrl}/api/blameless/incidents?limit=${pagination.limit}&page=${pagination.page}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch incidents, ${response.status}`);
+    }
+    const data = await response.json();
+    setPagination({
+      ...pagination,
+      count: data.pagination.count,
+    });
+    return data.incidents;
+  }, [pagination.page]);
 
   if (loading) {
     return <Progress />;
@@ -85,5 +116,5 @@ export const IncidentFetchComponent = () => {
     return <ResponseErrorPanel error={error} />;
   }
 
-  return <DenseTable incidents={value || []} />;
+  return <DenseTable incidents={value || []} pagination={pagination} setPagination={setPagination} />;
 };

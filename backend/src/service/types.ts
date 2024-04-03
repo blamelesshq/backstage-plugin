@@ -6,6 +6,15 @@ import {
   PluginEndpointDiscovery,
 } from '@backstage/backend-common';
 
+export type GetIncidentsResponse = {
+  incidents: BlamelessIncident[];
+  pagination: {
+    limit: number;
+    offset: number;
+    count?: number;
+  };
+};
+
 export type BlamelessIncident = {
   id: number,
   title: string,
@@ -38,7 +47,7 @@ export  interface  BlamelessAPI {
     checkTokenExpiry: () => Promise<string | null>;
     getNewToken: () => Promise<AuthResponse | null>;
     updateServices: (entities: Entity[]) => Promise<void>;
-    getIncidents: (page: number) => Promise<BlamelessIncident[]>;
+    getIncidents: (page: number) => Promise<GetIncidentsResponse>;
 }
 
 export type BlamelessConnectionConfig = {

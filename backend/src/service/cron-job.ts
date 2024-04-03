@@ -23,7 +23,6 @@ export class BlamelessJob {
                     kind: kinds,
                 },
             }, token);
-            console.log(entities);
             return entities;
         } catch (error) {
             this.blamelessService.connectionConfig.logger.error('Error fetching entities from catalog', error);

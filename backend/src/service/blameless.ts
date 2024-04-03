@@ -4,7 +4,8 @@ import {
     BlamelessConnectionConfig,
     AuthResponse,
     BlamelessIncident,
-    IncidentResponse
+    IncidentResponse,
+    GetIncidentsResponse,
 } from "./types";
 
 export class BlamelessService implements BlamelessAPI {
@@ -122,7 +123,6 @@ export class BlamelessService implements BlamelessAPI {
         .then(async response => {
             if (response.status === 200) {
                 const data:IncidentResponse = await response.json();
-                console.log('pagination ------- ', data.pagination);
                 // format the date to file BlamelessIncident type
                 const incidents: BlamelessIncident[] = [];
                 data.incidents.forEach((incident: any) => {
@@ -145,6 +145,7 @@ export class BlamelessService implements BlamelessAPI {
                     pagination: {
                         limit: data.pagination.limit,
                         offset: data.pagination.offset,
+                        count: data.pagination.count
                     }
                 };
             }
@@ -155,6 +156,7 @@ export class BlamelessService implements BlamelessAPI {
                 pagination: {
                     limit: 0,
                     offset: 0,
+                    count: 0
                 }
             };
         })
@@ -166,13 +168,14 @@ export class BlamelessService implements BlamelessAPI {
                 pagination: {
                     limit: 0,
                     offset: 0,
+                    count: 0
                 }
             };
         });
     }
 
 
-    async getIncidents(page: number = 0): Promise<BlamelessIncident[]> {
+    async getIncidents(page: number = 0, limit: number = 100): Promise<GetIncidentsResponse> {
         // get incidents from blameless
         let token: string;
         const tokenData = await this.checkTokenExpiry();
@@ -189,15 +192,14 @@ export class BlamelessService implements BlamelessAPI {
             }
         }
         // get paginated incidents
-        const limit = 100;
         const offset = page * limit;
         const response = await this.fetchIncidents(limit, offset, token);
         if (response.ok) {
-            return response.incidents;
+            return {incidents: response.incidents, pagination: response.pagination};
         }
          // log error if failed to get incidents
         this.connectionConfig.logger.error('Failed to get incidents! Error: ', response);
-        return [];
+        return {incidents: [], pagination: {limit: 0, offset: 0}};
 
     }
 }
