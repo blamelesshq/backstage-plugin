@@ -38,7 +38,7 @@ export class BlamelessJob {
         const entities = await this.listCatalog();
         // update blameless services
         if (entities?.items){
-            await this.blamelessService.updateServices(entities);
+            await this.blamelessService.updateServices(entities.items);
         } else {
             this.blamelessService.connectionConfig.logger.info('Failed to get entities from catalog');
         }

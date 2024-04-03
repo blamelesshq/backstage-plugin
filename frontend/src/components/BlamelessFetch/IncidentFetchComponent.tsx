@@ -60,10 +60,8 @@ export const DenseTable = ({ incidents }: DenseTableProps) => {
       <Table
         title="Incidents"
         options={{
-          search: true,
-          paging: true,
-          pageSize: 20,
-          paginationType:'normal',
+          search: false,
+          paging: false,
           columnResizable: true,
         }}
         columns={columns}
