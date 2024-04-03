@@ -39,6 +39,25 @@ To use the plugin add the following code to your
 ``` packages/backend/src/index.ts ```
 
 #### For the new Backend system
+
+To enable Auth Service-to-Service:
+  run this command to generate the signing secret:
+  ```bash
+  node -p 'require("crypto").randomBytes(24).toString("base64")'
+  ```
+
+  Then enbale the the Auth uncomment the following lines in the app-config.yaml
+  ```yaml
+  backend:
+    # Used for enabling authentication, secret is shared by all backend plugins
+    # See https://backstage.io/docs/auth/service-to-service-auth for
+    # information on the format
+    auth:
+      keys:
+        - secret: GiNQIQJ0mSXj8NxQlZZHPbddmehKrd8h #<<----- siging secret generated earlier
+  ```
+
+  Then
   ```Javascript
   // packages/backend/src/index.ts
 

@@ -15,7 +15,7 @@ run the following command in the root of your backstage app
 You can install Blameless via yarn:
 
 ```bash
-  yarn --cwd packages/backend add @blamelesshq/blameless-backstage app
+  yarn --cwd packages/app add @blamelesshq/blameless-backstage app
 ```
  
 ## Requirments

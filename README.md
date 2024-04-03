@@ -16,6 +16,7 @@ You can install Blameless via yarn:
 
 ```bash
   yarn --cwd packages/backend add @blamelesshq/blameless-backstage app
+  yarn --cwd packages/app add @blamelesshq/blameless-backstage app
 ```
  
 ## Requirments
@@ -92,6 +93,8 @@ To use the plugin add the following code to your
       keys:
         - secret: GiNQIQJ0mSXj8NxQlZZHPbddmehKrd8h #<<----- siging secret generated earlier
   ```
+
+  Then
   ```Javascript
   // packages/backend/src/index.ts
   import { createBackend } from '@backstage/backend-defaults';
