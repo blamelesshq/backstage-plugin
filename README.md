@@ -40,14 +40,15 @@ blameless:
   ``` packages/app/src/components/Root/Root.tsx ```
 
   ```Javascript
-    // packages/app/src/components/Root/Root.tsx
+  // packages/app/src/components/Root/Root.tsx
   import {BlamelessLogo} from '@blamelesshq/blameless-backstage/frontend';
 
-    export const Root = ({ children }: PropsWithChildren<{}>) => (
-    ... 
-    <SidebarItem icon={BlamelessLogo} to="blameless" text="Blameless" />; //<<-- Add the blameless plugin 
-    ....
-    );
+  ...
+  export const Root = ({ children }: PropsWithChildren<{}>) => (
+  ... 
+  <SidebarItem icon={BlamelessLogo} to="blameless" text="Blameless" />; //<<-- Add the blameless plugin 
+  ....
+  );
   ```
 
 
@@ -58,12 +59,12 @@ blameless:
   // packages/app/src/App.tsx
   import {BlamelessuiPage} from '@blamelesshq/blameless-backstage/frontend';
 
-    const routes = (
-    ... 
-    <Route path="blameless" element={<BlamelessuiPage />} /> //<<-- Add the blameless plugin
-    ....
-    )
-    ....
+  const routes = (
+  ... 
+  <Route path="blameless" element={<BlamelessuiPage />} /> //<<-- Add the blameless plugin
+  ....
+  )
+  ....
 
   ```
 
@@ -75,7 +76,6 @@ To use the plugin add the following code to your
 #### For the new Backend system
   ```Javascript
   // packages/backend/src/index.ts
-
   import { createBackend } from '@backstage/backend-defaults';
 
   const backend = createBackend();
