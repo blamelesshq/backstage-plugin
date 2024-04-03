@@ -1,11 +1,11 @@
 # blameless Plugin
 
-Welcome to the blameless backstage front-end plugin!
+Welcome to the blameless backstage plugin!
 
 
 ## Overview
 
-**Backstage Front-End Plugin** is a front-end plugin designed specifically for Blameless clients, offering seamless integration with the Backstage platform to manage and access Blameless incidents directly from the Backstage user interface. This plugin provides Blameless users with convenient and intuitive tools to interact with their incidents, enabling efficient incident management workflows within the familiar Backstage environment. With features customized for Blameless clients, such as incident tracking, resolution status updates, and retrospective analysis, the Backstage Front-End Plugin enhances collaboration and transparency in incident response processes.
+**Backstage Plugin** is a plugin designed specifically for Blameless clients, offering seamless integration with the Backstage platform to manage and access Blameless incidents directly from the Backstage user interface. This plugin provides Blameless users with convenient and intuitive tools to interact with their incidents, enabling efficient incident management workflows within the familiar Backstage environment. With features customized for Blameless clients, such as incident tracking, resolution status updates, and retrospective analysis, the Backstage Plugin enhances collaboration and transparency in incident response processes.
 
 
 ## Installation
