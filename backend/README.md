@@ -52,7 +52,7 @@ To use the plugin add the following code to your
     import('@backstage/plugin-catalog-backend-module-scaffolder-entity-model'),
   );
   ... 
-  backend.add(import('@blamelesshq/blameless-backstage')); //<<-- Add the blameless plugin 
+  backend.add(import('@blamelesshq/blameless-backstage/backend')); //<<-- Add the blameless plugin 
   ....
 
   ```
@@ -63,7 +63,7 @@ To use the plugin add the following code to your
   Create new file under the plugins call it blameless
   ```Javascript
   // packages/backend/src/plugins/blameless.ts
-  import {createRouter} from '@blamelesshq/blameless-backstage';
+  import {createRouter} from '@blamelesshq/blameless-backstage/backend';
   import { Router } from 'express';
   import { PluginEnvironment } from '../types';
 
