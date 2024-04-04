@@ -49,7 +49,8 @@ export async function createRouter(
     router.get('/incidents', async (req, response) => {
       const page = Number(req.query.page) || 0;
       const limit = Number(req.query.limit) || 100;
-      const incidents = await blamelessJob.blamelessService.getIncidents(page, limit);
+      const search = req.query.search as string;
+      const incidents = await blamelessJob.blamelessService.getIncidents(search, page, limit);
       response.json(incidents);
     });
   } else {

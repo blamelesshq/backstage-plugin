@@ -47,7 +47,7 @@ export  interface  BlamelessAPI {
     checkTokenExpiry: () => Promise<string | null>;
     getNewToken: () => Promise<AuthResponse | null>;
     updateServices: (entities: Entity[]) => Promise<void>;
-    getIncidents: (page: number) => Promise<GetIncidentsResponse>;
+    getIncidents: (search:string, page: number) => Promise<GetIncidentsResponse>;
 }
 
 export type BlamelessConnectionConfig = {

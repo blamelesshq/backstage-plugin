@@ -111,9 +111,15 @@ export class BlamelessService implements BlamelessAPI {
         });
     }
 
-    async fetchIncidents(limit: number, offset: number, token: string): Promise<IncidentResponse> {
+    async fetchIncidents(search: string, limit: number, offset: number, token: string): Promise<IncidentResponse> {
+        let url: string;
+        if (search) {
+            url = `${this.baseurl}/api/v1/incidents?limit=${limit}&offset=${offset}&search=${search}`;
+        } else {
+            url = `${this.baseurl}/api/v1/incidents?limit=${limit}&offset=${offset}`;
+        }
         // fetch incidents from blameless
-        return await fetch(`${this.baseurl}/api/v1/incidents?limit=${limit}&offset=${offset}`, {
+        return await fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -175,7 +181,7 @@ export class BlamelessService implements BlamelessAPI {
     }
 
 
-    async getIncidents(page: number = 0, limit: number = 100): Promise<GetIncidentsResponse> {
+    async getIncidents(search: string = '', page: number = 0, limit: number = 100): Promise<GetIncidentsResponse> {
         // get incidents from blameless
         let token: string;
         const tokenData = await this.checkTokenExpiry();
@@ -193,7 +199,7 @@ export class BlamelessService implements BlamelessAPI {
         }
         // get paginated incidents
         const offset = page * limit;
-        const response = await this.fetchIncidents(limit, offset, token);
+        const response = await this.fetchIncidents(search, limit, offset, token);
         if (response.ok) {
             return {incidents: response.incidents, pagination: response.pagination};
         }

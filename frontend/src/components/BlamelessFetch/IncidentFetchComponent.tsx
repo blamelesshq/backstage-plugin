@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Table, TableColumn, Progress, ResponseErrorPanel } from '@backstage/core-components';
+import {SearchBar} from '@backstage/plugin-search-react';
 import useAsync from 'react-use/lib/useAsync';
 import { useApi, configApiRef } from '@backstage/core-plugin-api';
 
@@ -12,7 +13,13 @@ const useStyles = makeStyles({
   },
   link:{
     color:'blue'
-  }
+  },
+  searchBar: {
+    marginBottom: '1rem',
+    width: '50%',
+    borderRadius: '10px',
+  },
+
 });
 
 type BlamelessIncident = {
@@ -28,15 +35,15 @@ type BlamelessIncident = {
 
 type DenseTableProps = {
   incidents: BlamelessIncident[];
-  pagination:{
+  param:{
     page: number;
     limit: number;
     count: number;
   };
-  setPagination: (pagination: {page: number, limit: number, count:number}) => void;
+  setParam: (param: {page: number, limit: number, count:number}) => void;
 };
 
-export const DenseTable = ({ incidents, pagination, setPagination }: DenseTableProps) => {
+export const DenseTable = ({ incidents, param, setParam }: DenseTableProps) => {
   const classes = useStyles();
   const columns: TableColumn[] = [
     { title: 'ID', field: 'id', width: '8%'},
@@ -62,59 +69,72 @@ export const DenseTable = ({ incidents, pagination, setPagination }: DenseTableP
     };
   });
 
-  const stateChanged = (val: number) => {
-    setPagination({
-      ...pagination,
-      page: val
+  const pageChanged = (page: number) => {
+    setParam({
+      ...param,
+      page: page
     });
   };
   return (
-    <>
       <Table
         title="Incidents"
         options={{
           search: false,
           paging: true,
           columnResizable: true,
-          pageSize: pagination.limit,
+          pageSize: param.limit,
+          paginationPosition: 'bottom',
         }}
         columns={columns}
         data={data || []}
-        onPageChange={(page) => stateChanged(page)}
-        totalCount={pagination.count}
-        page={pagination.page}
+        onPageChange={(page: number) => pageChanged(page)}
+        totalCount={param.count}
+        page={param.page}
         />
-      </>
     );
 };
 
 export const IncidentFetchComponent = () => {
-  const [pagination, setPagination] = useState({
+  const classes = useStyles();
+  const [search, setSearch] = useState('');
+  const [param, setParam] = useState({
     page: 0,
     limit:20,
     count: 0,
   });
+  const searchChanged = (val: string) => {
+    setSearch(val);
+  };
   const config = useApi(configApiRef);
   const { value, loading, error } = useAsync(async (): Promise<BlamelessIncident[]> => {
     // fetch blameless incidents
     const backendUrl = config.getString('backend.baseUrl');
-    const response = await fetch(`${backendUrl}/api/blameless/incidents?limit=${pagination.limit}&page=${pagination.page}`);
+    const response = await fetch(`${backendUrl}/api/blameless/incidents?limit=${param.limit}&page=${param.page}&search=${search}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch incidents, ${response.status}`);
     }
     const data = await response.json();
-    setPagination({
-      ...pagination,
+    setParam({
+      ...param,
       count: data.pagination.count,
     });
     return data.incidents;
-  }, [pagination.page]);
+  }, [param.page, search]);
 
-  if (loading) {
-    return <Progress />;
-  } else if (error) {
+
+  if (error) {
     return <ResponseErrorPanel error={error} />;
   }
 
-  return <DenseTable incidents={value || []} pagination={pagination} setPagination={setPagination} />;
+  return(
+    <>
+      <SearchBar
+        placeholder="Search for incidents"
+        value={search}
+        onChange={(val) => searchChanged(val)}
+        className={classes.searchBar}
+      />
+      {loading? <Progress /> : <DenseTable incidents={value || []} param={param} setParam={setParam}/>}
+    </>
+  );
 };
