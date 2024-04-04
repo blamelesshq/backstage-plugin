@@ -82,7 +82,7 @@ export class BlamelessService implements BlamelessAPI {
         } else{
             const data = await this.getNewToken();
             if (!data) {
-                throw new Error('Failed to get new token');
+                throw new Error('Failed to get new token, please check the auth key');
             }
             else {
                 token = data.access_token;
@@ -190,7 +190,7 @@ export class BlamelessService implements BlamelessAPI {
         } else{
             const data = await this.getNewToken();
             if (!data) {
-                throw new Error('Failed to get new token');
+                throw new Error('Failed to get new token, please check the auth key');
             }
             else {
                 token = data.access_token;

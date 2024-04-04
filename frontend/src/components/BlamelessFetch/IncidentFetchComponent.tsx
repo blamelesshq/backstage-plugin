@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Table, TableColumn, Progress, ResponseErrorPanel } from '@backstage/core-components';
 import {SearchBar} from '@backstage/plugin-search-react';
@@ -46,13 +46,13 @@ type DenseTableProps = {
 export const DenseTable = ({ incidents, param, setParam }: DenseTableProps) => {
   const classes = useStyles();
   const columns: TableColumn[] = [
-    { title: 'ID', field: 'id', width: '8%'},
-    { title: 'Postmortem', field: 'postmortem', width: '8%'},
-    { title: 'Title', field: 'title', width: '30%'},
-    { title: 'Type', field: 'type', width: '10%'},
-    { title: 'Severity', field: 'severity', width: '10%'},
-    { title: 'Status', field: 'status', width: '14%'},
-    { title: 'Created', field: 'created', width: '20%'},
+    { id:1, title: 'ID', field: 'id', width: '8%'},
+    { id:2, title: 'Postmortem', field: 'postmortem', width: '8%'},
+    { id:3, title: 'Title', field: 'title', width: '30%'},
+    { id:4, title: 'Type', field: 'type', width: '10%'},
+    { id:5, title: 'Severity', field: 'severity', width: '10%'},
+    { id:6, title: 'Status', field: 'status', width: '14%'},
+    { id:7, title: 'Created', field: 'created', width: '20%'},
   ];
 
   const data = incidents.map(incident => {
@@ -108,17 +108,22 @@ export const IncidentFetchComponent = () => {
   const config = useApi(configApiRef);
   const { value, loading, error } = useAsync(async (): Promise<BlamelessIncident[]> => {
     // fetch blameless incidents
-    const backendUrl = config.getString('backend.baseUrl');
-    const response = await fetch(`${backendUrl}/api/blameless/incidents?limit=${param.limit}&page=${param.page}&search=${search}`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch incidents, ${response.status}`);
+    try {
+      const backendUrl = config.getString('backend.baseUrl');
+      const response = await fetch(`${backendUrl}/api/blameless/incidents?limit=${param.limit}&page=${param.page}&search=${search}`);
+      const data = await response.json();
+      if (!response.ok) {
+        throw data.error || 'error occurred fetching incidents';
+      }
+      
+      setParam({
+        ...param,
+        count: data.pagination.count,
+      });
+      return data.incidents;
+    } catch (error_) {
+      throw new Error(`Failed to fetch incidents, ${error_}`);
     }
-    const data = await response.json();
-    setParam({
-      ...param,
-      count: data.pagination.count,
-    });
-    return data.incidents;
   }, [param.page, search]);
 
 
