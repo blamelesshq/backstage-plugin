@@ -3,6 +3,10 @@
   "version": "0.1.29",
   "author": "Blameless",
   "license": "ISC",
+  "keywords": [
+    "backstage",
+    "blameless"
+  ],
   "scripts": {
     "build": "npm run build:frontend && npm run build:backend",
     "build:frontend": "cd frontend && npm run build",
