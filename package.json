@@ -29,6 +29,7 @@
     "@backstage/catalog-client": "^1.6.0",
     "@backstage/catalog-model": "^1.4.4",
     "@backstage/config": "^1.1.1",
+    "@backstage/core-plugin-api": "^1.9.1",
     "@backstage/plugin-auth-node": "^0.4.7",
     "@backstage/plugin-catalog-react": "^1.10.0",
     "@backstage/plugin-permission-common": "^0.7.12",

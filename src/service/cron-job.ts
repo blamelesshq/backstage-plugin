@@ -1,6 +1,7 @@
 import { CatalogClient } from '@backstage/catalog-client';
 import { BlamelessService } from './blameless';
 import { TaskScheduler } from '@backstage/backend-tasks';
+import { ServerTokenManager } from '@backstage/backend-common';
 import { BlamelessConnectionConfig } from './types';
 
 
@@ -15,7 +16,13 @@ export class BlamelessJob {
     async listCatalog(): Promise<any[]> {
         // get list of backstage entities by kind
         const kinds = this.blamelessService.kinds;
-        const entities = await this.catalogClient.getEntities({ filter: {kind : kinds}});
+        // get token
+        const tokenManager = ServerTokenManager.fromConfig(
+            this.blamelessService.connectionConfig.config,
+            { logger: this.blamelessService.connectionConfig.logger }
+        );
+        const token = await tokenManager.getToken();
+        const entities = await this.catalogClient.getEntities({ filter: {kind : kinds}}, token);
         return entities.items;
     }
 
