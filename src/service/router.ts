@@ -12,7 +12,6 @@ import { BlamelessJob } from './cron-job';
 
 export interface RouterOptions {
   logger: Logger;
-  catalogClient: CatalogClient;
   fetchApi: FetchApi;
 }
 
