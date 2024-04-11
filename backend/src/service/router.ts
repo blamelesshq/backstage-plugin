@@ -8,25 +8,16 @@ import Router from 'express-promise-router';
 import { Logger } from 'winston';
 import { BlamelessJob } from './cron-job';
 import { CatalogClient } from '@backstage/catalog-client';
-import { DiscoveryService, RootConfigService } from '@backstage/backend-plugin-api';
-import { FetchApi } from '@backstage/core-plugin-api';
 
 
 export interface RouterOptions {
   logger: Logger;
-  discovery?: DiscoveryService;
-  catalogClient?: CatalogClient;
-  fetchApi?: FetchApi;
-  permissions?: string[];
-  config?: RootConfigService;
-  auth?: any;
-  httpAuth?: any;
 }
 
 export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
-  const { logger, fetchApi } = options;
+  const { logger } = options;
 
   const config = await loadBackendConfig({
     argv: process.argv,
@@ -45,7 +36,6 @@ export async function createRouter(
     // Start the cron job only if the config is provided
     const catalogApi = new CatalogClient({
       discoveryApi: HostDiscovery.fromConfig(config),
-      fetchApi: fetchApi,
     });
     const blamelessJob =new BlamelessJob({config, logger: logger, discovery: HostDiscovery.fromConfig(config), catalogClient: catalogApi});
     await blamelessJob.start();
@@ -59,7 +49,7 @@ export async function createRouter(
         response.json(incidents);
       } catch (error) {
         logger.error('Failed to get incidents', error);
-        response.status(500).json({error: error?.message || 'Failed to get incidents'});
+        response.status(500).json({error: error || 'Failed to get incidents'});
       }
     });
   } else {
