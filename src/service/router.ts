@@ -7,18 +7,16 @@ import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
 import { CatalogClient } from '@backstage/catalog-client';
-import { FetchApi } from '@backstage/core-plugin-api';
 import { BlamelessJob } from './cron-job';
 
 export interface RouterOptions {
   logger: Logger;
-  fetchApi: FetchApi;
 }
 
 export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
-  const { logger, fetchApi } = options;
+  const { logger } = options;
 
   const config = await loadBackendConfig({
     argv: process.argv,
@@ -31,7 +29,6 @@ export async function createRouter(
    // Start the cron job only if the config is provided
    const catalogApi = new CatalogClient({
     discoveryApi: HostDiscovery.fromConfig(config),
-    fetchApi: fetchApi,
   });
 
   // Start the cron job
