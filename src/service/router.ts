@@ -12,8 +12,8 @@ import { BlamelessJob } from './cron-job';
 
 export interface RouterOptions {
   logger: Logger;
-  catalogClient?: CatalogClient;
-  fetchApi?: FetchApi;
+  catalogClient: CatalogClient;
+  fetchApi: FetchApi;
 }
 
 export async function createRouter(
@@ -36,7 +36,12 @@ export async function createRouter(
   });
 
   // Start the cron job
-  const blamelessJob =new BlamelessJob({config, logger: logger, discovery: HostDiscovery.fromConfig(config), catalogClient: catalogApi});
+  const blamelessJob =new BlamelessJob({
+    config,
+    logger: logger,
+    discovery: HostDiscovery.fromConfig(config),
+    catalogClient: catalogApi
+  });
   await blamelessJob.start();
 
   router.get('/blameless/health', (_, response) => {
