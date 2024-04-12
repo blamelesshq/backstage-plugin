@@ -18,7 +18,6 @@ import {
           http: coreServices.httpRouter,
         },
         async init({ http, logger}) {
-          http.addAuthPolicy({ path: '/', allow: 'unauthenticated', });
           http.use(
             await createRouter({
                 logger: loggerToWinstonLogger(logger),
