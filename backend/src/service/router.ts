@@ -37,7 +37,11 @@ export async function createRouter(
     const catalogApi = new CatalogClient({
       discoveryApi: HostDiscovery.fromConfig(config),
     });
-    const blamelessJob =new BlamelessJob({config, logger: logger, discovery: HostDiscovery.fromConfig(config), catalogClient: catalogApi});
+    const blamelessJob =new BlamelessJob({
+      config, logger: logger,
+      discovery: HostDiscovery.fromConfig(config),
+      catalogClient: catalogApi
+    });
     await blamelessJob.start();
     // add router for blameless incidents
     router.get('/incidents', async (req, response) => {

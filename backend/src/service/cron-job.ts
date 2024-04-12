@@ -1,8 +1,8 @@
 
 import { BlamelessService } from './blameless';
 import { TaskScheduler } from '@backstage/backend-tasks';
-import { BlamelessConnectionConfig } from './types';
 import { ServerTokenManager } from '@backstage/backend-common';
+import { BlamelessConnectionConfig } from './types';
 
 export class BlamelessJob {
     public readonly blamelessService: BlamelessService;
