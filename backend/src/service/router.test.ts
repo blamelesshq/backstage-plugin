@@ -13,7 +13,28 @@ jest.mock('@backstage/backend-common', () => {
         getBaseUrl: jest.fn().mockReturnValue('mock-base-url'),
       }),
     },
+    loadBackendConfig: jest.fn().mockImplementation(() => {
+      return {
+        has: jest.fn().mockReturnValue(true),
+        get: jest.fn().mockReturnValue('mock-value'),
+      };
+    }
+  ),
+
   };
+});
+  
+
+// // mock config
+const entities = [{ apiVersion:'', metadata: { name: 'test', namespace:'default' }, kind: 'test', spec: { type: 'test' } }];
+jest.mock('@backstage/catalog-client', () => {
+    return {
+        CatalogClient: jest.fn().mockImplementation(() => {
+            return {
+                getEntities: jest.fn().mockResolvedValue({ items: entities}),
+            };
+        }),
+    };
 });
 
 // mock BlamelessJob
