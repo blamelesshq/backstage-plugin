@@ -141,7 +141,7 @@ export class BlamelessService implements BlamelessAPI {
                         created: incident.created.$date,
                         postmortem_url: incident.is_postmortem_required?
                             `${this.baseurl}/retrospective/${incident._id}`: null,
-                        incident_url: `${this.baseurl}/incident/${incident._id}/events`
+                        incident_url: `${this.baseurl}/incidents/${incident._id}/events`
                     };
                     incidents.push(formattedIncident);
                 });
