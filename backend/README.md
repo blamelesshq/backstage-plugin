@@ -1,22 +1,22 @@
 # blameless Plugin
 
-Welcome to the blameless backstage plugin!
+Welcome to the blameless backstage backend plugin!
 
 
 ## Overview
 
-**Backstage Plugin** is a plugin designed specifically for Blameless clients, offering seamless integration with the Backstage platform to manage and access Blameless incidents directly from the Backstage user interface. This plugin provides Blameless users with convenient and intuitive tools to interact with their incidents, enabling efficient incident management workflows within the familiar Backstage environment. With features customized for Blameless clients, such as incident tracking, resolution status updates, and retrospective analysis, the Backstage Plugin enhances collaboration and transparency in incident response processes.
+**Backstage Backend Sync Plugin** is a backend plugin designed specifically for Blameless clients who need to synchronize their entities effortlessly. 
+With this plugin, clients can seamlessly sync their entities with blameless on a periodic interval, ensuring consistency and accuracy.
 
 
 ## Installation
 
 To install the Blameless backstage plugin.
 run the following command in the root of your backstage app
-You can install Blameless via yarn:
+You can install MyNpmPackage via yarn:
 
 ```bash
   yarn --cwd packages/backend add @blamelesshq/blameless-backstage app
-  yarn --cwd packages/app add @blamelesshq/blameless-backstage app
 ```
  
 ## Requirments
@@ -35,49 +35,12 @@ blameless:
 
 ## Usage
 
-### Front-End
-
-  To use the plugin add the following code to your 
-  ``` packages/app/src/components/Root/Root.tsx ```
-
-  ```Javascript
-  // packages/app/src/components/Root/Root.tsx
-  import {BlamelessLogo} from '@blamelesshq/blameless-backstage/frontend';
-
-  ...
-  export const Root = ({ children }: PropsWithChildren<{}>) => (
-  ... 
-  <SidebarItem icon={BlamelessLogo} to="blameless" text="Blameless" />; //<<-- Add the blameless plugin 
-  ....
-  );
-  ```
-
-
-  and add the following: 
-  ``` packages/app/src/App.tsx ```
-
-  ```Javascript
-  // packages/app/src/App.tsx
-  import {BlamelessuiPage} from '@blamelesshq/blameless-backstage/frontend';
-
-  const routes = (
-  ... 
-  <Route path="blameless" element={<BlamelessuiPage />} /> //<<-- Add the blameless plugin
-  ....
-  )
-  ....
-
-  ```
-
-
-### Backend-End
-
 To use the plugin add the following code to your 
 ``` packages/backend/src/index.ts ```
 
 #### For the new Backend system
 
-  To enable Auth Service-to-Service:
+To enable Auth Service-to-Service:
   run this command to generate the signing secret:
   ```bash
   node -p 'require("crypto").randomBytes(24).toString("base64")'
@@ -97,6 +60,7 @@ To use the plugin add the following code to your
   Then
   ```Javascript
   // packages/backend/src/index.ts
+
   import { createBackend } from '@backstage/backend-defaults';
 
   const backend = createBackend();

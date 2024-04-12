@@ -1,0 +1,1 @@
+export { IncidentFetchComponent } from './IncidentFetchComponent';

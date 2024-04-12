@@ -1,0 +1,4 @@
+auth:
+  environment: development
+  providers:
+    guest: {}

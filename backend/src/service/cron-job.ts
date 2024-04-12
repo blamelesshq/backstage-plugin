@@ -1,19 +1,16 @@
-import { CatalogClient } from '@backstage/catalog-client';
+
 import { BlamelessService } from './blameless';
 import { TaskScheduler } from '@backstage/backend-tasks';
 import { ServerTokenManager } from '@backstage/backend-common';
 import { BlamelessConnectionConfig } from './types';
 
-
 export class BlamelessJob {
     public readonly blamelessService: BlamelessService;
-    private readonly catalogClient: CatalogClient;
     constructor(connectionConfig: BlamelessConnectionConfig) {
         this.blamelessService = new BlamelessService(connectionConfig);
-        this.catalogClient = new CatalogClient({ discoveryApi: this.blamelessService.connectionConfig.discovery });
     }
 
-    async listCatalog(): Promise<any[]> {
+    async listCatalog(): Promise<any> {
         // get list of backstage entities by kind
         const kinds = this.blamelessService.kinds;
         // get token
@@ -22,8 +19,17 @@ export class BlamelessJob {
             { logger: this.blamelessService.connectionConfig.logger }
         );
         const token = await tokenManager.getToken();
-        const entities = await this.catalogClient.getEntities({ filter: {kind : kinds}}, token);
-        return entities.items;
+        try{
+            const entities = await this.blamelessService.connectionConfig.catalogClient.getEntities({
+                filter: {
+                    kind: kinds,
+                },
+            }, token);
+            return entities;
+        } catch (error) {
+            this.blamelessService.connectionConfig.logger.error('Error fetching entities from catalog', error);
+            return error;
+        }
     }
 
     async updateBlamelessServices(): Promise<void> {
@@ -32,7 +38,11 @@ export class BlamelessJob {
         // get list of entities
         const entities = await this.listCatalog();
         // update blameless services
-        await this.blamelessService.updateServices(entities);
+        if (entities?.items){
+            await this.blamelessService.updateServices(entities.items);
+        } else {
+            this.blamelessService.connectionConfig.logger.info('Failed to get entities from catalog');
+        }
     }
     
     async start(): Promise<void> {

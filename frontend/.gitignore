@@ -1,15 +1,5 @@
 # macOS
 .DS_Store
-# Node.js dependencies
-/node_modules
-
-# Build output
-/dist
-/dist-types
-/build
-
-# Environment variables
-.env
 
 # Logs
 logs

@@ -1,0 +1,1 @@
+export { IncidentComponent } from './IncidentComponent';

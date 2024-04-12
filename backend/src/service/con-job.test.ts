@@ -14,15 +14,6 @@ jest.mock('@backstage/backend-common', () => {
 });
 
 const entities = [{ apiVersion:'', metadata: { name: 'test', namespace:'default' }, kind: 'test', spec: { type: 'test' } }];
-jest.mock('@backstage/catalog-client', () => {
-    return {
-        CatalogClient: jest.fn().mockImplementation(() => {
-            return {
-                getEntities: jest.fn().mockResolvedValue({ items: entities}),
-            };
-        }),
-    };
-});
 
 jest.mock('./blameless', () => {
     return {
@@ -32,7 +23,13 @@ jest.mock('./blameless', () => {
                 connectionConfig: {
                     discovery: {getBaseUrl:jest.fn(), getExternalBaseUrl:jest.fn()},
                     config: {getString: jest.fn()},
-                    logger: {info: jest.fn()}
+                    logger: {
+                        info: jest.fn(),
+                        error: jest.fn(),
+                    },
+                    catalogClient: {
+                        getEntities: jest.fn().mockResolvedValue({items: entities}),
+                    },
                 },
                 kinds: ['test'],
                 interval: 5,
@@ -62,7 +59,7 @@ describe('BlamelessJob', () => {
         const job = new BlamelessJob(mockBlamelessService.connectionConfig);
         const result = await job.listCatalog();
 
-        expect(result).toEqual(entities);
+        expect(result).toEqual({items: entities});
     });
 
     it('should update blameless services', async () => {

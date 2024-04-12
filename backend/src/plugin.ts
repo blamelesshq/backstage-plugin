@@ -14,8 +14,8 @@ import {
     register(env) {
       env.registerInit({
         deps: {
-            logger: coreServices.logger,
-            http: coreServices.httpRouter,
+          logger: coreServices.logger,
+          http: coreServices.httpRouter,
         },
         async init({ http, logger}) {
           http.use(
