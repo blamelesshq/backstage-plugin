@@ -6,6 +6,7 @@ import {
 import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
+import { CatalogClient } from '@backstage/catalog-client';
 import { BlamelessJob } from './cron-job';
 
 export interface RouterOptions {
@@ -25,8 +26,18 @@ export async function createRouter(
   const router = Router();
   router.use(express.json());
 
+   // Start the cron job only if the config is provided
+   const catalogApi = new CatalogClient({
+    discoveryApi: HostDiscovery.fromConfig(config),
+  });
+
   // Start the cron job
-  const blamelessJob =new BlamelessJob({config, logger: logger, discovery: HostDiscovery.fromConfig(config)});
+  const blamelessJob =new BlamelessJob({
+    config,
+    logger: logger,
+    discovery: HostDiscovery.fromConfig(config),
+    catalogClient: catalogApi
+  });
   await blamelessJob.start();
 
   router.get('/blameless/health', (_, response) => {

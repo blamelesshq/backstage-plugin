@@ -3,6 +3,7 @@
 
 # Build output
 /dist
+/dist-types
 /build
 
 # Environment variables

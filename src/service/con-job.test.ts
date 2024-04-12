@@ -2,6 +2,16 @@ import { BlamelessJob } from './cron-job';
 import { BlamelessService } from './blameless';
 import { TaskScheduler } from '@backstage/backend-tasks';
 
+// mock ServerTokenManager
+jest.mock('@backstage/backend-common', () => {
+    return {
+        ServerTokenManager: {
+            fromConfig: jest.fn().mockReturnValue({
+                getToken: jest.fn().mockResolvedValue('token'),
+            }),
+        },
+    };
+});
 
 const entities = [{ apiVersion:'', metadata: { name: 'test', namespace:'default' }, kind: 'test', spec: { type: 'test' } }];
 jest.mock('@backstage/catalog-client', () => {
